@@ -90,11 +90,50 @@ const addDept = () => {
         })
 }
 
-// const addRole = () => {
-//     return Connection.promise().query('SELECT department.id, department.name FROM department;')
-//     .then(([departments]) => { let department}
-// }
-
+// const addRole = async () => {  // async arrow function waits for result of sql query
+//     const depts = await db.promise().query( 
+//       "SELECT department.id, department.name FROM department;" // selects id and name of all depts in department table
+//     );
+//     const deptChoice = depts.map(({ id, name }) => ({ // creates new array w name and value properties
+//       name,
+//       value: id,
+//     }));
+  
+//     const answers = await inquirer.prompt([ 
+//       {
+//         type: 'input',
+//         name: 'title',
+//         message: 'Role name?',
+//         validate: (rtest) => { if (rtest) { return true;
+//         } else { console.log('Field Cannot Be Blank..Try Again!'); return false;}}},
+//        {
+//         type: 'list',
+//         name: 'department',
+//         message: 'Select Department?',
+//         choices: deptChoice, // choices from mapped dept new array
+//       },
+//       {
+//         type: 'input',
+//         name: 'salary',
+//         message: 'Enter Numeric Value for your salary? ',
+//         validate: (stest) => { if (stest) { return true;
+//         } else { console.log('Field Cannot Be Blank..Try Again!'); return false;}}}
+//     ])
+  
+//      await db.query(
+//       'INSERT INTO role SET ?', // inserts new data from prompts above
+//       {
+//         title: answers.title,
+//         department_id: answers.department,
+//         salary: answers.salary,
+//       }, (err) => {
+//         if (err) throw err; //error catch
+//       }
+//     ); console.log('Table Updated!!');
+    
+//       viewRoles(); // shows updated table
+//   };
+  
 
 
 // sequelize.sync().then(() => {
