@@ -1,6 +1,6 @@
 # Employee Tracker
 
-App for managing employee database.
+App for managing an employee database.
 
 ![License Type](https://shields.io/badge/license-MIT-blue)
 ## Table of Contents
@@ -11,14 +11,17 @@ App for managing employee database.
 * [Tests](#tests)
 * [Questions](#questions)
 * [Screenshots-Videos](#screenshots-videos)
-* [Deployment-Links](#deployment-links)
+
 
 ## Description
 An application for managing your business by allowing you to quickly view all your departments, roles, and employees in your company.  It also allows for updating this data and adding new ones! 
 ## Screenshots-Videos
+Video Demonstration
+ ![*Video-Demonstration-Link*](https://drive.google.com/file/d/1VPywf1hMN48LYbs2ehysyFmQoJk2A99H/view)
+
 ScreenShot Below
 
-![Application Demo Screenshot1](https://github.com/Stickkman/noteTaker11/blob/main/assets/screenshots/screenshot01.jpg?raw=true)
+![Application Demo Screenshot1](https://github.com/Stickkman/employeeTracker12/blob/main/assets/screenshots/screenshot01.jpg?raw=true)
 
 ## Installation
 
