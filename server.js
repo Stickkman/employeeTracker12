@@ -1,10 +1,11 @@
+// main app server.js
 
-
+// import needed modules
 const express = require('express');
-const inquirer = require('inquirer');
-const mysql = require('mysql2');
-require('console.table'); 
-const { printTable } = require('console-table-printer');
+const inquirer = require('inquirer'); // for prompts
+const mysql = require('mysql2'); // for working with mysql connection
+require('console.table'); // alt for rendering tables
+const { printTable } = require('console-table-printer'); // for rendering tables in console
 const fs = require("fs");
 
 const sequelize = require('./config/connection.js'); // import / instantiate sequelize
