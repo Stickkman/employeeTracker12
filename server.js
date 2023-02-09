@@ -3,7 +3,7 @@
 const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-// require('console.table'); backup in case issues 
+require('console.table'); 
 const { printTable } = require('console-table-printer');
 const fs = require("fs");
 
@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const db = mysql.createConnection(
+const db = mysql.createConnection( // create database connection
     {
         host:'localhost',
         user: 'root',
@@ -23,7 +23,7 @@ const db = mysql.createConnection(
         database: 'employee_db'
     }, console.log('Connected to EmployeeDatabase...')
 );
-
+// MAIN MENU
 const promptMenu = () => { return inquirer.prompt([
     {
         type: 'list',
@@ -57,26 +57,27 @@ const promptMenu = () => { return inquirer.prompt([
             default: process.exit();
         }});
     };
+// VIEW DEPARTMENTS FUNCTION    
 const viewDepts = () => {
     db.query('SELECT * FROM department;', (e, results) => {
         printTable(results);
         promptMenu();
     });
 };
-
+// VIEW ROLES FUNCTION
 const viewRoles = () => {
     db.query('SELECT * FROM role;', (e, results) => {
         printTable(results);
         promptMenu();
     });
 };
-
+// VIEW ALL EMPLOYEES FUNCTION
 const viewEmps = () => {
-    db.query("SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name,' ',m.last_name) AS manager FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON r.department_id = d.id LEFT JOIN employee m ON e.manager_id = m.id;",
+    db.query("SELECT E.id, E.first_name, E.last_name, R.title, D.name AS department, R.salary, CONCAT(M.first_name,' ',M.last_name) AS manager FROM employee E JOIN role R ON E.role_id = R.id JOIN department D ON R.department_id = D.id LEFT JOIN employee M ON E.manager_id = M.id;",
         (e, results) => {
-            printTable(results); promptMenu(); //!! NEED TO WORK ON THIS !!
+            console.table(results); promptMenu(); //!! NEED TO WORK ON THIS !!
         })};
-
+// ADD DEPARTMENT FUNCTION
 const addDept = () => {
     inquirer.prompt([{
         type:'input',
@@ -89,7 +90,7 @@ const addDept = () => {
         viewDepts();
         })
 }
-
+// ADD ROLE FUNCTION
 const addRole = () => {  
     return db.promise().query("SELECT department.id, department.name FROM department;") // selects id and name of all depts in department table
     .then(([depts]) => { let deptChoice = depts.map(({ id, name }) => ({ name: name, value: id })); // creates new array w name and value properties
@@ -123,7 +124,7 @@ const addRole = () => {
       }); console.log('Table Updated!!');
         }).then(() => viewRoles())}) // shows updated table
 }
-
+// ADD EMPLOYEE FUNCTION
 const addEmp = (roles) => {
     return db.promise().query("SELECT R.id, R.title FROM role R;")
         .then(([emps]) => { let titleChoices = emps.map(({ id, title }) => ({ value: id, name: title }))
@@ -169,8 +170,42 @@ const addEmp = (roles) => {
                         )})
                         .then(() => viewEmps())})})
 }
+// UPDATE ROLE FUNCTION
+const updateEmpRole = () => {
+    return db.promise().query("SELECT R.id, R.title, R.salary, R.department_id FROM role R;")
+        .then(([roles]) => { let roleChoices = roles.map(({ id, title }) => ({ value: id, name: title }));
+            inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'role',
+                        message: 'Role to update?',
+                        choices: roleChoices
+                }])
+                .then(role => { console.log(role);
+                    inquirer.prompt([{
+                            type: 'input',
+                            name: 'title',
+                            message: 'Title Name?',
+                            validate: titleName => { if (titleName) { return true;
+                            } else { console.log('Field Cannot Be Blank..Try Again!');
+                            return false;}}
+                        },
+                        {
+                            type: 'input',
+                            name: 'salary',
+                            message: 'NUMERIC Salary?',
+                            validate: salary => { if (salary) { return true;
+                            } else { console.log('Field Cannot Be Blank..Try Again!');
+                            return false;}}}])
+                                .then(({ title, salary }) => {
+                            const query = db.query('UPDATE role SET title = ?, salary = ? WHERE id = ?',
+                                [title, salary, role.role],
+                                function (e, res) { if (e) throw e;
+                                })}) 
+                            .then(() => promptMenu())
+                    })});
 
-
+};
 // sequelize.sync().then(() => {
 //     app.listen(PORT, () =>  console.log(`Express Server listening @ http://localhost:${PORT}`));
 // });
