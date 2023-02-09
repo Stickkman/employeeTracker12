@@ -17,7 +17,7 @@ App for managing an employee database.
 An application for managing your business by allowing you to quickly view all your departments, roles, and employees in your company.  It also allows for updating this data and adding new ones! 
 ## Screenshots-Videos
 Video Demonstration
- ![*Video-Demonstration-Link*](https://drive.google.com/file/d/1VPywf1hMN48LYbs2ehysyFmQoJk2A99H/view)
+ [*Video-Demonstration-Link*](https://drive.google.com/file/d/1VPywf1hMN48LYbs2ehysyFmQoJk2A99H/view)
 
 ScreenShot Below
 
