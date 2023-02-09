@@ -20,7 +20,7 @@ const db = mysql.createConnection(
         host:'localhost',
         user: 'root',
         password: 'password',
-        database: 'employeeDatabase'
+        database: 'employee_db'
     }, console.log('Connected to EmployeeDatabase...')
 );
 
@@ -57,8 +57,48 @@ const promptMenu = () => { return inquirer.prompt([
             default: process.exit();
         }});
     };
+const viewDepts = () => {
+    db.query('SELECT * FROM department;', (e, results) => {
+        printTable(results);
+        promptMenu();
+    });
+};
+
+const viewRoles = () => {
+    db.query('SELECT * FROM role;', (e, results) => {
+        printTable(results);
+        promptMenu();
+    });
+};
+
+const viewEmps = () => {
+    db.query("SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name,' ',m.last_name) AS manager FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON r.department_id = d.id LEFT JOIN employee m ON e.manager_id = m.id;",
+        (e, results) => {
+            printTable(results); promptMenu(); //!! NEED TO WORK ON THIS !!
+        })};
+
+const addDept = () => {
+    inquirer.prompt([{
+        type:'input',
+        name: 'name',
+        message: 'Department Name?',
+        validate: (dtest) => { if (dtest) { return true;
+        } else { console.log('Field Cannot Be Blank..Try Again!'); return false;}}}])
+        .then(name => { db.promise().query('INSERT INTO department SET ?', name);
+        console.log(`New Dept `, name, ` has been added, Table Updated!!`);
+        viewDepts();
+        })
+}
+
+// const addRole = () => {
+//     return Connection.promise().query('SELECT department.id, department.name FROM department;')
+//     .then(([departments]) => { let department}
+// }
+
 
 
 // sequelize.sync().then(() => {
 //     app.listen(PORT, () =>  console.log(`Express Server listening @ http://localhost:${PORT}`));
 // });
+
+promptMenu();
