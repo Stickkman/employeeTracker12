@@ -123,7 +123,52 @@ const addRole = () => {
       }); console.log('Table Updated!!');
         }).then(() => viewRoles())}) // shows updated table
 }
-  
+
+const addEmp = (roles) => {
+    return db.promise().query("SELECT R.id, R.title FROM role R;")
+        .then(([emps]) => { let titleChoices = emps.map(({ id, title }) => ({ value: id, name: title }))
+            db.promise().query("SELECT E.id, CONCAT(E.first_name,' ',E.last_name) AS manager FROM employee E;")
+             .then(([managers]) => { let managerChoices = managers.map(({ id, manager }) => ({ value: id, name: manager
+             }));
+                inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'firstName',
+                        message: 'Employee FIRST name?',
+                        validate: (fstest) => { if (fstest) { return true;
+                        } else { console.log('Field Cannot Be Blank..Try Again!'); return false;}}},
+                    {
+                        type: 'input',
+                        name: 'lastName',
+                        message: 'Employee LAST name?',
+                        validate: lntest => { if (lntest) { return true;
+                        } else { console.log('Field Cannot Be Blank..Try Again!'); return false;}}},
+                    {
+                        type: 'list',
+                        name: 'role',
+                        message: 'Employee role?',
+                        choices: titleChoices
+                    },
+                    {
+                        type: 'list',
+                        name: 'manager',
+                        message: 'Employees manager?',
+                        choices: managerChoices
+                    }])
+                    .then(({ firstName, lastName, role, manager }) => {
+                        const query = db.query('INSERT INTO employee SET ?',
+                            {
+                                first_name: firstName,
+                                last_name: lastName,
+                                role_id: role,
+                                manager_id: manager
+                            },
+                            function (err, res) {
+                                if (err) throw err;
+                                console.log('Updated!!')}
+                        )})
+                        .then(() => viewEmps())})})
+}
 
 
 // sequelize.sync().then(() => {
